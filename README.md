@@ -1,6 +1,7 @@
 # rsk-nbcm
 ## RSK Node Bandwidth Consumption Monitor
 
+
 This tool  instruments [RSKj](https://github.com/rsksmart/rskj) to collect and export bandwidth consumption data.
 
 The bandwidth consumption is categorised by wire message type. The block synchronisation distinguishes between blockchain tip synchronization, and old data synchronization.
