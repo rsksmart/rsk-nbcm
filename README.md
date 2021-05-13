@@ -14,7 +14,7 @@ The tool collects data using instrumentation. No changes to the RSKj are necessa
 
 ```-javaagent:rsk-nbcm-0.1.0.jar  ```
 
-See [sample startup script](doc/rsk-nbcm)
+A sample startup script together with the compiled jars is in the `doc/rsk-nbcm` directory.
 
 
 ## Data file structure
