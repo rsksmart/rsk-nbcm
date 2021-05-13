@@ -1,16 +1,26 @@
 package co.rsk.nbcm;
 
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.CtClass;
+import javassist.CtMethod;
+import javassist.NotFoundException;
 
-    public class MessageVisitorTransformer extends TransformerBase {
+/**
+ * Added methods for the "co.rsk.net.messages.MessageVisitor" class.
+ */
+public class MessageVisitorTransformer extends TransformerBase {
 
-        public MessageVisitorTransformer(String targetClassName, ClassLoader targetClassLoader) {
-            super(targetClassName, targetClassLoader);
-        }
-
-        @Override
-        void defineTransformation(CtClass cc) throws NotFoundException, CannotCompileException {
-            CtMethod m = cc.getDeclaredMethod("apply");
-            m.insertBefore("co.rsk.nbcm.DataFile.setBlockHeight(message.getBlock().getNumber());");
-        }
+    public MessageVisitorTransformer(String targetClassName, ClassLoader targetClassLoader) {
+        super(targetClassName, targetClassLoader);
     }
+
+    @Override
+    void defineTransformation(CtClass cc) throws NotFoundException, CannotCompileException {
+        CtMethod mApply = cc.getDeclaredMethod("apply");
+        mApply.insertBefore("co.rsk.nbcm.DataFile.applyBlockBegin();");
+        mApply.insertAfter("co.rsk.nbcm.DataFile.applyBlockEnd();");
+
+        CtMethod mRelay = cc.getDeclaredMethod("tryRelayBlock");
+        mRelay.insertBefore("co.rsk.nbcm.DataFile.setIsBestBlock(((co.rsk.net.BlockProcessResult)result).isBest());");
+    }
+}

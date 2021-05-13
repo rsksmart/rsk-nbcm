@@ -1,11 +1,17 @@
 package co.rsk.nbcm;
 
-import javassist.*;
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.NotFoundException;
 
 import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 
+/**
+ * Base class for all transformers.
+ */
 public abstract class TransformerBase implements ClassFileTransformer {
     private final ClassLoader targetClassLoader;
     private final String targetClassName;
@@ -15,7 +21,7 @@ public abstract class TransformerBase implements ClassFileTransformer {
         this.targetClassLoader = targetClassLoader;
     }
 
-    abstract void defineTransformation(CtClass cc ) throws NotFoundException, CannotCompileException;
+    abstract void defineTransformation(CtClass cc) throws NotFoundException, CannotCompileException;
 
     @Override
     public byte[] transform(
@@ -35,7 +41,7 @@ public abstract class TransformerBase implements ClassFileTransformer {
         if (className.equals(finalTargetClassName)
                 && loader.equals(targetClassLoader)) {
 
-            System.out.println("[Agent] Transforming class "+this.targetClassName);
+            System.out.println("[Agent] Transforming class " + this.targetClassName);
             try {
                 ClassPool cp = ClassPool.getDefault();
                 CtClass cc = cp.get(targetClassName);

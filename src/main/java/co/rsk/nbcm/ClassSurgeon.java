@@ -4,15 +4,19 @@ import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
 import java.util.function.BiFunction;
 
+/**
+ * Instrumentation tool.
+ */
 public final class ClassSurgeon {
+
     public void transformMessageVisitor(Instrumentation inst) {
         final String className = "co.rsk.net.messages.MessageVisitor";
-        transformClass(className, inst, (n,l)->new MessageVisitorTransformer(n, l));
+        transformClass(className, inst, (n, l) -> new MessageVisitorTransformer(n, l));
     }
 
     public void transformMessageCodec(Instrumentation inst) {
         final String className = "org.ethereum.net.rlpx.MessageCodec";
-        transformClass(className, inst, (n,l)->new MessageCodecTransformer(n, l));
+        transformClass(className, inst, (n, l) -> new MessageCodecTransformer(n, l));
     }
 
     private static void transformClass(
@@ -29,8 +33,8 @@ public final class ClassSurgeon {
             System.out.println("Class [{}] not found with Class.forName");
         }
         // otherwise iterate all loaded classes and find what we want
-        for(Class<?> clazz: instrumentation.getAllLoadedClasses()) {
-            if(clazz.getName().equals(className)) {
+        for (Class<?> clazz : instrumentation.getAllLoadedClasses()) {
+            if (clazz.getName().equals(className)) {
                 targetCls = clazz;
                 targetClassLoader = targetCls.getClassLoader();
                 transform(targetCls, targetClassLoader, instrumentation, transformMaker);
